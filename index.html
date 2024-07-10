@@ -85,7 +85,7 @@
 <body>
     <div class="login-container">
         <h2>Login</h2>
-        <form action="/login" method="POST">
+        <form method="POST" action="">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
@@ -98,6 +98,25 @@
         </form>
         <p>Don't have an account? <a href="#">Sign up</a></p>
     </div>
+
+    <?php
+    // Simple user data for demonstration purposes
+    $users = [
+        'user1' => 'password1',
+        'user2' => 'password2'
+    ];
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        if (isset($users[$username]) && $users[$username] == $password) {
+            echo "<p style='color:green; text-align:center;'>Login successful! Welcome, $username.</p>";
+        } else {
+            echo "<p style='color:red; text-align:center;'>Invalid username or password.</p>";
+        }
+    }
+    ?>
 </body>
 </html>
 
