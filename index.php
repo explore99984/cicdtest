@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Login & Signup Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,7 +15,7 @@
             margin: 0;
         }
 
-        .login-container {
+        .container {
             background-color: #fff;
             padding: 20px 30px;
             border-radius: 8px;
@@ -23,7 +23,7 @@
             width: 300px;
         }
 
-        .login-container h2 {
+        .container h2 {
             margin-bottom: 20px;
             font-size: 24px;
             text-align: center;
@@ -52,7 +52,7 @@
             border-color: #007bff;
         }
 
-        .login-button {
+        .button {
             width: 100%;
             padding: 10px;
             border: none;
@@ -63,40 +63,61 @@
             cursor: pointer;
         }
 
-        .login-button:hover {
+        .button:hover {
             background-color: #0056b3;
         }
 
-        .login-container p {
+        .container p {
             text-align: center;
             margin-top: 10px;
         }
 
-        .login-container p a {
+        .container p a {
             color: #007bff;
             text-decoration: none;
         }
 
-        .login-container p a:hover {
+        .container p a:hover {
             text-decoration: underline;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="container">
         <h2>Login</h2>
         <form method="POST" action="">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+                <label for="login_username">Username</label>
+                <input type="text" id="login_username" name="login_username" required>
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <label for="login_password">Password</label>
+                <input type="password" id="login_password" name="login_password" required>
             </div>
-            <button type="submit" class="login-button">Login</button>
+            <button type="submit" class="button" name="login">Login</button>
         </form>
-        <p>Don't have an account? <a href="#">Sign up</a></p>
+        <p>Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
+    </div>
+
+    <div class="container" style="display:none;" id="signupContainer">
+        <h2>Sign Up</h2>
+        <form method="POST" action="">
+            <div class="form-group">
+                <label for="signup_username">Username</label>
+                <input type="text" id="signup_username" name="signup_username" required>
+            </div>
+            <div class="form-group">
+                <label for="signup_password">Password</label>
+                <input type="password" id="signup_password" name="signup_password" required>
+            </div>
+            <button type="submit" class="button" name="signup">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
     </div>
 
     <?php
@@ -106,17 +127,43 @@
         'user2' => 'password2'
     ];
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+    // Handle login
+    if (isset($_POST['login'])) {
+        $username = $_POST['login_username'];
+        $password = $_POST['login_password'];
 
         if (isset($users[$username]) && $users[$username] == $password) {
-            echo "<p style='color:green; text-align:center;'>Login successful! Welcome, $username.</p>";
+            echo "<p class='message' style='color:green;'>Login successful! Welcome, $username.</p>";
         } else {
-            echo "<p style='color:red; text-align:center;'>Invalid username or password.</p>";
+            echo "<p class='message' style='color:red;'>Invalid username or password.</p>";
+        }
+    }
+
+    // Handle signup
+    if (isset($_POST['signup'])) {
+        $new_username = $_POST['signup_username'];
+        $new_password = $_POST['signup_password'];
+
+        if (!isset($users[$new_username])) {
+            $users[$new_username] = $new_password;
+            echo "<p class='message' style='color:green;'>Signup successful! Please login.</p>";
+        } else {
+            echo "<p class='message' style='color:red;'>Username already taken. Please choose another.</p>";
         }
     }
     ?>
+
+    <script>
+        document.getElementById('showSignup').addEventListener('click', function() {
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('signupContainer').style.display = 'block';
+        });
+
+        document.getElementById('showLogin').addEventListener('click', function() {
+            document.getElementById('signupContainer').style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+        });
+    </script>
 </body>
 </html>
 
